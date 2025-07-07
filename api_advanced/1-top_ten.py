@@ -7,7 +7,7 @@ def top_ten(subreddit):
     """Return number of subscribers if @subreddit is valid subreddit.
     if not return 0."""
 
-    headers = {'User-Agent': 'MyAPI/0.0.1'}
+    headers = {'User-Agent': 'myfirst/0.0.1'}
     subreddit_url = "https://reddit.com/r/{}.json".format(subreddit)
     response = requests.get(subreddit_url, headers=headers)
 
