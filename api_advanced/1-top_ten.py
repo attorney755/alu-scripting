@@ -1,24 +1,35 @@
 #!/usr/bin/python3
-"""Script that fetch 10 hot post for a given subreddit."""
+"""
+This module contains the function top_ten.
+"""
 import requests
+from sys import argv
 
 
 def top_ten(subreddit):
-    """Return number of subscribers if @subreddit is valid subreddit.
-    if not return 0."""
+    """
+    Returns the top ten posts for a given subreddit.
+    """
+    user = {'User-Agent': 'Mozilla/5.0'}
+    url = 'https://www.reddit.com/r/{}/hot/.json?limit=10'.format(subreddit)
 
-    headers = {'User-Agent': 'MyAPI/0.0.1'}
-    subreddit_url = "https://reddit.com/r/{}.json".format(subreddit)
-    response = requests.get(subreddit_url, headers=headers)
+    try:
+        response = requests.get(url, headers=user, allow_redirects=False)
+        response.raise_for_status()
+        data = response.json()
 
-    if response.status_code == 200:
-        json_data = response.json()
-        for i in range(10):
-            print(
-                json_data.get('data')
-                .get('children')[i]
-                .get('data')
-                .get('title')
-            )
+        if 'data' in data and 'children' in data['data']:
+            for post in data['data']['children']:
+                print(post['data']['title'])
+        print("OK")
+    except requests.exceptions.RequestException:
+        print("None")
+    except ValueError:
+        print("None")
+
+
+if __name__ == "__main__":
+    if len(argv) > 1:
+        top_ten(argv[1])
     else:
-        print(None)
+        print("Usage: ./script.py <subreddit>")
